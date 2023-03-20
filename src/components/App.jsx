@@ -1,7 +1,7 @@
 // import Form from './Input/Input';
 
 import { nanoid } from 'nanoid';
-import React, { Component, useState, useEffect } from 'react';
+import React, { Component } from 'react';
 import { H1, H2, MainContainer } from './App.styled';
 import ContactList from './Contacts/Contacts';
 import Filter from './Filter/Filter';
@@ -18,10 +18,10 @@ export class App extends Component {
     filter: '',
   };
 
-//   const[contacts, setContacts] = useState(JSON.parse(localStorage.getItem('contacts')) ?? " ",)
-// useEffect(() => {
-//     window.localStorage.setItem('contacts',JSON.stringify(contacts) )
-//   },[contacts])
+  //   const[contacts, setContacts] = useState(JSON.parse(localStorage.getItem('contacts')) ?? " ",)
+  // useEffect(() => {
+  //     window.localStorage.setItem('contacts',JSON.stringify(contacts) )
+  //   },[contacts])
 
   componentDidMount() {
     const contacts = localStorage.getItem('contacts');
