@@ -7,20 +7,20 @@ import ContactList from './Contacts/Contacts';
 import Filter from './Filter/Filter';
 import ContactsForm from './Phonebook/FormikForm';
 
-const useLocalStorage = (key, defaultValue) => {
-  const [state, setState] = useState(() => {
-    return JSON.parse(localStorage.getItem(key)) ?? defaultValue;
-  });
-  useEffect(() => {
-    window.localStorage.setItem(key, JSON.stringify(state));
-  }, [state, key]);
-  return [state, setState];
-};
+// `const useLocalStorage = (key, defaultValue) => {
+//   const [state, setState] = useState(() => {
+//     return JSON.parse(localStorage.getItem(key)) ?? defaultValue;
+//   });
+//   useEffect(() => {
+//     window.localStorage.setItem(key, JSON.stringify(state));
+//   }, [state, key]);
+//   return [state, setState];
+// };`
 
 export default function HookApp() {
   const isFirstRender = useRef(true);
-  const [localStorageContacts, setlocalStorageContacts] =
-    useLocalStorage('contacts');
+  // const [localStorageContacts, setlocalStorageContacts] =
+  //   useLocalStorage('contacts');
   const [contacts, setContacts] = useState([
     { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
     { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
@@ -30,8 +30,8 @@ export default function HookApp() {
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
-    if (localStorageContacts) {
-      setContacts(localStorageContacts);
+    if (JSON.parse(localStorage.getItem('contacts'))) {
+      setContacts(JSON.parse(localStorage.getItem('contacts')));
     }
   }, []);
 
@@ -41,8 +41,8 @@ export default function HookApp() {
       return;
     }
 
-    setlocalStorageContacts(contacts);
-  }, [contacts, setlocalStorageContacts]);
+    window.localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
   const formSubmitHandler = (data, { resetForm }) => {
     if (
