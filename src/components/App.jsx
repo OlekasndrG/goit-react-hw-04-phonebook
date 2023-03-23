@@ -1,7 +1,7 @@
 // import Form from './Input/Input';
 
 import { nanoid } from 'nanoid';
-import React, { Component, useEffect, useState, useRef } from 'react';
+import React, { Component, useEffect, useState, useRef, useMemo } from 'react';
 import { H1, H2, MainContainer } from './App.styled';
 import ContactList from './Contacts/Contacts';
 import Filter from './Filter/Filter';
@@ -28,6 +28,13 @@ export default function HookApp() {
     { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
   ]);
   const [filter, setFilter] = useState('');
+
+  // const visibleContats = useMemo(() => {
+  //   if (filter.toLowerCase() === '') return contacts;
+  //   return contacts.filter(contact =>
+  //     contact.name.toLowerCase().includes(filter)
+  //   );
+  // }, [contacts, filter]);
 
   useEffect(() => {
     if (JSON.parse(localStorage.getItem('contacts'))) {
