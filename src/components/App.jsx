@@ -1,7 +1,7 @@
 // import Form from './Input/Input';
 
 import { nanoid } from 'nanoid';
-import React, { Component, useEffect, useState, useRef, useMemo } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { H1, H2, MainContainer } from './App.styled';
 import ContactList from './Contacts/Contacts';
 import Filter from './Filter/Filter';
@@ -16,38 +16,22 @@ import ContactsForm from './Phonebook/FormikForm';
 //   }, [state, key]);
 //   return [state, setState];
 // };`
+const defaultContacts = [
+  { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+  { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+  { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+  { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+];
 
 export default function HookApp() {
-  const isFirstRender = useRef(true);
-  // const [localStorageContacts, setlocalStorageContacts] =
-  //   useLocalStorage('contacts');
-  const [contacts, setContacts] = useState([
-    { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-    { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-    { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-    { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-  ]);
+  const [contacts, setContacts] = useState(() => {
+    return JSON.parse(localStorage.getItem('contacts')) ?? defaultContacts;
+  });
+
   const [filter, setFilter] = useState('');
 
-  // const visibleContats = useMemo(() => {
-  //   if (filter.toLowerCase() === '') return contacts;
-  //   return contacts.filter(contact =>
-  //     contact.name.toLowerCase().includes(filter)
-  //   );
-  // }, [contacts, filter]);
-
   useEffect(() => {
-    if (JSON.parse(localStorage.getItem('contacts'))) {
-      setContacts(JSON.parse(localStorage.getItem('contacts')));
-    }
-  }, []);
-
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-
+    console.log('любой другой рендер');
     window.localStorage.setItem('contacts', JSON.stringify(contacts));
   }, [contacts]);
 
@@ -60,7 +44,6 @@ export default function HookApp() {
       alert(`${data.name} is already in contacts.`);
       return;
     }
-    console.log(data);
     const newContact = {
       ...data,
       id: nanoid(),
@@ -71,7 +54,7 @@ export default function HookApp() {
   const filteredContacts = () => {
     if (filter.toLowerCase() === '') return contacts;
     return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter)
+      contact.name.toLowerCase().includes(filter.toLowerCase())
     );
   };
   const onDeleteContact = currentContactID => {
@@ -98,88 +81,88 @@ export default function HookApp() {
   );
 }
 
-export class App extends Component {
-  state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
-    filter: '',
-  };
+// export class App extends Component {
+//   state = {
+//     contacts: [
+//       { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+//       { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+//       { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+//       { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+//     ],
+//     filter: '',
+//   };
 
-  // componentDidMount() {
-  //   const contacts = localStorage.getItem('contacts');
-  //   const parsedContacts = JSON.parse(contacts);
-  //   if (parsedContacts) {
-  //     this.setState({ contacts: parsedContacts });
-  //   }
-  // }
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (this.state.contacts !== prevState.contacts) {
-  //     localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-  //   }
-  // }
+//   componentDidMount() {
+//     const contacts = localStorage.getItem('contacts');
+//     const parsedContacts = JSON.parse(contacts);
+//     if (parsedContacts) {
+//       this.setState({ contacts: parsedContacts });
+//     }
+//   }
+//   componentDidUpdate(prevProps, prevState) {
+//     if (this.state.contacts !== prevState.contacts) {
+//       localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+//     }
+//   }
 
-  formSubmitHandler = (data, { resetForm }) => {
-    if (
-      this.state.contacts.find(
-        contact => contact.name.toLowerCase() === data.name.toLowerCase()
-      )
-    ) {
-      alert(`${data.name} is already in contacts.`);
-      return;
-    }
-    const newContact = {
-      ...data,
-      id: nanoid(),
-    };
-    this.setState(prev => ({
-      contacts: [...prev.contacts, newContact],
-    }));
-    resetForm();
-  };
+//   formSubmitHandler = (data, { resetForm }) => {
+//     if (
+//       this.state.contacts.find(
+//         contact => contact.name.toLowerCase() === data.name.toLowerCase()
+//       )
+//     ) {
+//       alert(`${data.name} is already in contacts.`);
+//       return;
+//     }
+//     const newContact = {
+//       ...data,
+//       id: nanoid(),
+//     };
+//     this.setState(prev => ({
+//       contacts: [...prev.contacts, newContact],
+//     }));
+//     resetForm();
+//   };
 
-  onChangeFilterValue = evt => {
-    this.setState({
-      filter: evt.target.value,
-    });
-  };
+//   onChangeFilterValue = evt => {
+//     this.setState({
+//       filter: evt.target.value,
+//     });
+//   };
 
-  filteredContacts = () => {
-    const filter = this.state.filter.toLowerCase();
-    if (filter === '') return this.state.contacts;
-    return this.state.contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter)
-    );
-  };
+//   filteredContacts = () => {
+//     const filter = this.state.filter.toLowerCase();
+//     if (filter === '') return this.state.contacts;
+//     return this.state.contacts.filter(contact =>
+//       contact.name.toLowerCase().includes(filter)
+//     );
+//   };
 
-  onDeleteContact = currentContactID => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(
-        contact => contact.id !== currentContactID
-      ),
-    }));
-  };
+//   onDeleteContact = currentContactID => {
+//     this.setState(prevState => ({
+//       contacts: prevState.contacts.filter(
+//         contact => contact.id !== currentContactID
+//       ),
+//     }));
+//   };
 
-  render() {
-    return (
-      <MainContainer>
-        <H1>Phonebook</H1>
-        <ContactsForm handleSubmit={this.formSubmitHandler} />
-        <H2>Contacts</H2>
-        <Filter
-          value={this.state.filter}
-          onChangeFilterValue={this.onChangeFilterValue}
-        />
-        <ContactList
-          contacts={this.filteredContacts()}
-          onDeleteClick={this.onDeleteContact}
-        />
-      </MainContainer>
-    );
-  }
-}
+//   render() {
+//     return (
+//       <MainContainer>
+//         <H1>Phonebook</H1>
+//         <ContactsForm handleSubmit={this.formSubmitHandler} />
+//         <H2>Contacts</H2>
+//         <Filter
+//           value={this.state.filter}
+//           onChangeFilterValue={this.onChangeFilterValue}
+//         />
+//         <ContactList
+//           contacts={this.filteredContacts()}
+//           onDeleteClick={this.onDeleteContact}
+//         />
+//       </MainContainer>
+//     );
+//   }
+// }
 
 // export default App;
